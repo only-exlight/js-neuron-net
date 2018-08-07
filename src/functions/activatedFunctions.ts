@@ -1,4 +1,4 @@
-export function threshold(value: number, threshold: number): number {
+export function threshold(value: number, threshold = 0.5): number {
     if (value > threshold) {
         return 1;
     } else {

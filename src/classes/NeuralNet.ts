@@ -12,7 +12,7 @@ export class NeuralNet {
     
     constructor(config: NeuralNetConfig, inputValues: number[]) {
         this.initInputLayer(config.inputs, 0, 5, inputValues);
-        this.initOutputLayer(config.outputs);
+        this.initOutputLayer(config.outputs, config.outActvationFunc);
         this.initHideLayer(config.hideLayers, config.layersSize, config.activationFunc);
         this.initLinks(this.inputLayer, this.hideLeyers[1]);
         this.hideLeyers.forEach((layer, i) => {
@@ -38,11 +38,11 @@ export class NeuralNet {
             layer.forEach(neuron => {
                 neuron.outLinks.forEach(link => {
                     const sumVal = neuron.signal * link.weight;
-                    console.log(link);
                     link.neuron.addInputSignal(sumVal);
                 });
             })
         );
+        this.outLayer.forEach(neuron => console.log(neuron.signal));
 
     }
 
@@ -63,9 +63,9 @@ export class NeuralNet {
         }
     }
 
-    private initOutputLayer(outCount: number): void {
+    private initOutputLayer(outCount: number, actFunc: Function): void {
         for (let i = 0; i < outCount; i++) {
-            this.outLayer.push(new OutputNeuron());
+            this.outLayer.push(new OutputNeuron(actFunc));
         }
     }
 

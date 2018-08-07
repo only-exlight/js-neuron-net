@@ -1,12 +1,13 @@
 import { NeuralNet } from './classes/NeuralNet';
-import { sigma } from './functions/activatedFunctions';
+import { sigma, threshold } from './functions/activatedFunctions';
 
 const NN = new NeuralNet({
     activationFunc: sigma,
-    hideLayers: 3,
-    inputs: 3,
-    layersSize: 5,
-    outputs: 3
+    hideLayers: 2,
+    inputs: 2,
+    layersSize: 3,
+    outputs: 1,
+    outActvationFunc: sigma
 }, [1, 4, 2]);
 console.log(NN);
 NN.start();

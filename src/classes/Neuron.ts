@@ -38,7 +38,5 @@ export class HideNeuron implements Neuron {
         let sum = 0;
         values.forEach(v => sum += v);
         return sum;
-    }
-
-    
+    } 
 }

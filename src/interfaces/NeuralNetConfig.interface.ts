@@ -4,4 +4,5 @@ export interface NeuralNetConfig {
     hideLayers: number;
     layersSize: number;
     activationFunc: Function;
+    outActvationFunc: Function;
 }
