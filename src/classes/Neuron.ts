@@ -9,7 +9,7 @@ export class HideNeuron {
         for (let i = 0; i < inputCount; i++) {
             this.weights.push(Math.random())
         }
-        console.log(this.weights)
+        // console.log(this.weights)
     }
 
     private sumed(values: number[]) {

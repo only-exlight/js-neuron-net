@@ -1,11 +1,11 @@
 {
   "name": "neuronnet",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
-    "build": "webpack -w"
+    "build": "webpack --mode production"
   },
   "author": "eXlight",
   "license": "ISC",

@@ -20,13 +20,14 @@ export class NeuralNet {
         }
     }
     
-    private initHideLayer(hideCount: number, layerCount: number, actFunc: Function) {
-        for (let i = 0; i < layerCount; i++) {
+    private initHideLayer(hideCount: number, layersSize: number, actFunc: Function) {
+        for (let i = 0; i < hideCount; i++) {
             this.hideLeyers.push([]);
-            for (let j = 0; j < hideCount; i++){
+            for (let j = 0; j < layersSize; j++) {
                 this.hideLeyers[i].push(new HideNeuron(3, actFunc));
             }
         }
+        console.log(this.hideLeyers);
     }
 
     private initOutputLayer(outCount: number) {
