@@ -1,28 +1,44 @@
-export class HideNeuron {
-    private weights: number[] = [];
-    private links: any[] = [];
+import { NeuronLink } from '../interfaces/NeuronLink.interface';
+import { Neuron } from '../interfaces/Neuron.interface';
+
+export class HideNeuron implements Neuron {
+    private links: NeuronLink[] = [];
+    private inputSignals: number[] = [];
     public activated: Function;
+    private outSignal: number;
+
     constructor(inputCount: number, actFunc: Function) {
-        this.weights = [];
         this.links = [];
         this.activated = actFunc;
-        for (let i = 0; i < inputCount; i++) {
-            this.weights.push(Math.random())
-        }
-        // console.log(this.weights)
+    }
+
+    get signal(): number {
+        const sumSignal = this.sumed(this.inputSignals);
+        this.outSignal = this.activated(sumSignal);
+        return this.outSignal;
+    }
+
+    get outLinks(): NeuronLink[] {
+        return this.links;
+    }
+
+    public addLink(link: NeuronLink) {
+        this.links.push(link);
+    }
+
+    public addInputSignal(val: number) {
+        this.inputSignals.push(val);
+    }
+
+    public correctWeight(more = false) {
+        
     }
 
     private sumed(values: number[]) {
         let sum = 0;
-        values.forEach((value, i) => sum += value * this.weights[i])
+        values.forEach(v => sum += v);
         return sum;
     }
 
-    correctWeight(more = false) {
-        if (more) {
-
-        } else {
-
-        }
-    }
+    
 }
