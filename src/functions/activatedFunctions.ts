@@ -11,7 +11,7 @@ export function liner(value: number): number {
 }
 
 export function sigma(value: number): number {
-    return 1 / 1 + Math.pow(Math.E, value);
+    return 1 / (1 + Math.pow(Math.E, - 1 * value));
 }
 
 export function tan(value: number): number {

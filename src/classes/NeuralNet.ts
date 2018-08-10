@@ -11,10 +11,10 @@ export class NeuralNet {
     private outLayer:  OutputNeuron[] = [];
     
     constructor(config: NeuralNetConfig, inputValues: number[]) {
-        this.initInputLayer(config.inputs, 0, 5, inputValues);
+        this.initInputLayer(config.inputs, 0, 1, inputValues);
         this.initOutputLayer(config.outputs, config.outActvationFunc);
         this.initHideLayer(config.hideLayers, config.layersSize, config.activationFunc);
-        this.initLinks(this.inputLayer, this.hideLeyers[1]);
+        this.initLinks(this.inputLayer, this.hideLeyers[0]);
         this.hideLeyers.forEach((layer, i) => {
             if (i < this.hideLeyers.length - 1) {
                 this.initLinks(layer, this.hideLeyers[i + 1]);
@@ -43,7 +43,13 @@ export class NeuralNet {
             })
         );
         this.outLayer.forEach(neuron => console.log(neuron.signal));
+    }
 
+    public newDataSet(data: number[]) {
+        for (let i = 0; i < this.inputLayer.length; i++) {
+            this.inputLayer[i].addInputSignal(data[i]);
+        }
+        this.start();
     }
 
     private initInputLayer(inCount: number, min: number, max: number, inputValues: number[]): void {
@@ -73,7 +79,7 @@ export class NeuralNet {
         firstLayer.forEach((neuron: Neuron) => 
             secondLayer.forEach((lNeuron: Neuron) => 
                 neuron.addLink({
-                    weight: Math.random(),
+                    weight: Math.random() * (0.01 - 0.001) + 0.001,
                     neuron: lNeuron
                 })
         ));

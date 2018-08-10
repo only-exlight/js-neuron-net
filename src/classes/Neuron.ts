@@ -6,6 +6,8 @@ export class HideNeuron implements Neuron {
     private inputSignals: number[] = [];
     public activated: Function;
     private outSignal: number;
+    private min = 0;
+    private max = 1;
 
     constructor(inputCount: number, actFunc: Function) {
         this.links = [];
@@ -38,5 +40,5 @@ export class HideNeuron implements Neuron {
         let sum = 0;
         values.forEach(v => sum += v);
         return sum;
-    } 
+    }
 }

@@ -19,7 +19,8 @@ module.exports = {
     },
     plugins: [
             new CopyWebpackPlugin([
-                { from: 'src/index.html', to: '' }
+                { from: 'src/index.html', to: '' },
+                { from: 'src/training', to: 'training'}
             ])
         ],
     devtool: 'sourcemap'
