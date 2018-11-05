@@ -32,6 +32,10 @@ export class HideNeuron implements Neuron {
         this.inputSignals.push(val);
     }
 
+    public changeInputSignal(val:number, i: number): void {
+        this.inputSignals[i] = val;
+    }
+
     public correctWeight(more = false) {
         
     }

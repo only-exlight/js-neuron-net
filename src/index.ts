@@ -30,7 +30,7 @@ const imges = trainingSet.map(img => {
 });
 
 setTimeout(() => {
-    imges.forEach(img => {
+    imges.forEach((img, i) => {
         try {
             ctx.drawImage(img, 0, 0);
         } catch (e) {
@@ -47,5 +47,11 @@ setTimeout(() => {
             }
         }
         NN.newDataSet(toNetData);
+        if (trainingSet[i].isSquare) {
+            NN.correctWegth(1);
+        } else {
+            NN.correctWegth(0);
+        }
+        //console.log(NN, i);
     });
-}, 60000);
+}, 10000);

@@ -4,6 +4,7 @@ import { HideNeuron } from './Neuron';
 import { NeuralNetConfig } from '../interfaces/NeuralNetConfig.interface';
 import { NeuronLink } from '../interfaces/NeuronLink.interface';
 import { Neuron } from '../interfaces/Neuron.interface';
+import { sigma } from '../functions/activatedFunctions';
 
 export class NeuralNet {
     private inputLayer: InputNeuron[] = [];
@@ -23,8 +24,20 @@ export class NeuralNet {
         this.initLinks(this.hideLeyers[this.hideLeyers.length - 1], this.outLayer);
     }
 
-    public correctWegth(): void {
-
+    public correctWegth(waitVal: number): void {
+        const outWeightsDelta: number[] = [];
+        this.outLayer.forEach(outNeuron => {
+            const err = outNeuron.signal - waitVal;
+            outWeightsDelta.push(err * (sigma(outNeuron.signal) * (1 - sigma(outNeuron.signal))));
+        });
+        for (let i = this.hideLeyers.length - 1; i <= 0; i--) {
+            this.hideLeyers[i].forEach(hideNeuron => {
+                hideNeuron.outLinks.forEach(link => {
+                    link.weight = link.weight - hideNeuron.signal * outWeightsDelta[0] * 0.1 //learn reate;
+                })
+            })
+        }
+        console.log(this);
     }
     
     public start(): any {
@@ -49,7 +62,25 @@ export class NeuralNet {
         for (let i = 0; i < this.inputLayer.length; i++) {
             this.inputLayer[i].addInputSignal(data[i]);
         }
-        this.start();
+        this.restart();
+    }
+
+    private restart() {
+        this.inputLayer.forEach((neuron, i) => {
+            neuron.outLinks.forEach(link => {
+                const sumVal = neuron.signal * link.weight;
+                link.neuron.changeInputSignal(sumVal, i);
+            });
+        });
+        this.hideLeyers.forEach(layer =>
+            layer.forEach((neuron, i) => {
+                neuron.outLinks.forEach(link => {
+                    const sumVal = neuron.signal * link.weight;
+                    link.neuron.changeInputSignal(sumVal,i);
+                });
+            })
+        );
+        this.outLayer.forEach(neuron => console.log(neuron.signal));
     }
 
     private initInputLayer(inCount: number, min: number, max: number, inputValues: number[]): void {
@@ -79,7 +110,7 @@ export class NeuralNet {
         firstLayer.forEach((neuron: Neuron) => 
             secondLayer.forEach((lNeuron: Neuron) => 
                 neuron.addLink({
-                    weight: Math.random() * (0.01 - 0.001) + 0.001,
+                    weight: Math.random() * (1 - 0.1) + 0.1,
                     neuron: lNeuron
                 })
         ));

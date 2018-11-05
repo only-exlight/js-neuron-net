@@ -24,6 +24,10 @@ export class OutputNeuron implements Neuron {
         this.inputSignals.push(val);
     }
 
+    public changeInputSignal(val: number, i: number ): void {
+        this.inputSignals[i] = val;
+    }
+
     public addLink () { }
 
     private sumed(values: number[]) {

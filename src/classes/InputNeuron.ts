@@ -22,6 +22,10 @@ export class InputNeuron implements Neuron {
         return this.links;
     }
 
+    public changeInputSignal(signal: number, i: number ): void {
+        this.normalize(signal);
+    }
+    
     public addLink(link: NeuronLink) {
         this.links.push(link);
     }
