@@ -1,57 +1,21 @@
-import { NeuralNet } from './classes/NeuralNet';
-import { trainingSet } from './consts/trainingSet.const';
+import { TRAINING_DATA } from './consts/learn-set';
 import { sigma, threshold } from './functions/activatedFunctions';
+import { TrainerApp } from './classes/TrainerApp';
+import { CanvasParams } from './interfaces/CanvasParams';
+import { NeuralNetConfig } from './interfaces/NeuralNetConfig.interface';
 
-const cnv: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('cnv');
-const ctx = cnv.getContext('2d');
-cnv.width = 10;
-cnv.height = 10;
+const cnvParams: CanvasParams = {
+    id: 'cnv',
+    height: 10,
+    width: 10
+};
 
-const emptyData: number[] = [];
-for (let i = 0; i <= 99; i++) {
-    emptyData.push(0);
-}
-
-const NN = new NeuralNet({
+const netParapms: NeuralNetConfig = {
     activationFunc: sigma,
     hideLayers: 3,
     inputs: 100,
     layersSize: 15,
     outputs: 1,
     outActvationFunc: sigma
-}, emptyData);
-console.log(NN);
-NN.start();
-
-const imges = trainingSet.map(img => {
-    const imgTag = new Image(10,10);
-    imgTag.src = img.image;
-    return imgTag;
-});
-
-setTimeout(() => {
-    imges.forEach((img, i) => {
-        try {
-            ctx.drawImage(img, 0, 0);
-        } catch (e) {
-            console.log(img);
-        }
-        const imgd = ctx.getImageData(0, 0, 10, 10);
-        let pix = imgd.data;
-        let toNetData: number [] = []
-        for (let i = 0; i <= pix.length; i += 4) {
-            if (pix[i] === 255 && pix[i + 1] === 255 && pix[i + 2] === 255) {
-                toNetData.push(1);
-            } else {
-                toNetData.push(0);
-            }
-        }
-        NN.newDataSet(toNetData);
-        if (trainingSet[i].isSquare) {
-            NN.correctWegth(1);
-        } else {
-            NN.correctWegth(0);
-        }
-        //console.log(NN, i);
-    });
-}, 10000);
+}
+new TrainerApp(TRAINING_DATA, cnvParams, netParapms);

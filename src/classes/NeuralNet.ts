@@ -11,7 +11,7 @@ export class NeuralNet {
     private hideLeyers: Array<HideNeuron[]> = [];
     private outLayer:  OutputNeuron[] = [];
     
-    constructor(config: NeuralNetConfig, inputValues: number[]) {
+    constructor(config: NeuralNetConfig, inputValues: Int8Array) {
         this.initInputLayer(config.inputs, 0, 1, inputValues);
         this.initOutputLayer(config.outputs, config.outActvationFunc);
         this.initHideLayer(config.hideLayers, config.layersSize, config.activationFunc);
@@ -58,7 +58,7 @@ export class NeuralNet {
         this.outLayer.forEach(neuron => console.log(neuron.signal));
     }
 
-    public newDataSet(data: number[]) {
+    public newDataSet(data: Int8Array) {
         for (let i = 0; i < this.inputLayer.length; i++) {
             this.inputLayer[i].addInputSignal(data[i]);
         }
@@ -83,7 +83,7 @@ export class NeuralNet {
         this.outLayer.forEach(neuron => console.log(neuron.signal));
     }
 
-    private initInputLayer(inCount: number, min: number, max: number, inputValues: number[]): void {
+    private initInputLayer(inCount: number, min: number, max: number, inputValues: Int8Array): void {
         for (let i = 0; i < inCount; i++) {
             const inpNeuron = new InputNeuron(min, max);
             inpNeuron.addInputSignal(inputValues[i]);
