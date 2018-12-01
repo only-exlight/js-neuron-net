@@ -9,7 +9,7 @@ export class TrainerApp {
     private curNetData: Int8Array = new Int8Array(100);
     private net: NeuralNet;
 
-    constructor(
+    constructor (
         private trainerSet: TrainingExample[],
         cnvParams: CanvasParams,
         netParams: NeuralNetConfig
@@ -66,7 +66,7 @@ export class TrainerApp {
         try {
             this.ctx.drawImage(img, 0, 0);
         } catch (e) {
-            console.log(img);
+            console.log(e);
         }
         const imgData: ImageData = this.ctx.getImageData(0, 0, 10, 10);
         this.getPixelColor(imgData.data);

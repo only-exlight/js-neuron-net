@@ -17,5 +17,6 @@ const netParapms: NeuralNetConfig = {
     layersSize: 15,
     outputs: 1,
     outActvationFunc: sigma
-}
+};
+
 new TrainerApp(TRAINING_DATA, cnvParams, netParapms);

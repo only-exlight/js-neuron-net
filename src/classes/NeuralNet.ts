@@ -2,7 +2,6 @@ import { InputNeuron } from './InputNeuron';
 import { OutputNeuron } from './OutputNeuron';
 import { HideNeuron } from './Neuron';
 import { NeuralNetConfig } from '../interfaces/NeuralNetConfig.interface';
-import { NeuronLink } from '../interfaces/NeuronLink.interface';
 import { Neuron } from '../interfaces/Neuron.interface';
 import { sigma } from '../functions/activatedFunctions';
 
@@ -11,7 +10,7 @@ export class NeuralNet {
     private hideLeyers: Array<HideNeuron[]> = [];
     private outLayer:  OutputNeuron[] = [];
     
-    constructor(config: NeuralNetConfig, inputValues: Int8Array) {
+    constructor (config: NeuralNetConfig, inputValues: Int8Array) {
         this.initInputLayer(config.inputs, 0, 1, inputValues);
         this.initOutputLayer(config.outputs, config.outActvationFunc);
         this.initHideLayer(config.hideLayers, config.layersSize, config.activationFunc);
