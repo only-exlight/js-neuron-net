@@ -7,7 +7,7 @@ import { sigma } from '../functions/activatedFunctions';
 
 export class NeuralNet {
     private inputLayer: InputNeuron[] = [];
-    private hideLeyers: Array<HideNeuron[]> = [];
+    private hideLeyers: HideNeuron[][] = [];
     private outLayer:  OutputNeuron[] = [];
     
     constructor (config: NeuralNetConfig, inputValues: Int8Array) {
