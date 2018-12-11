@@ -12,9 +12,9 @@ const cnvParams: CanvasParams = {
 
 const netParapms: NeuralNetConfig = {
     activationFunc: sigma,
-    hideLayers: 3,
+    hideLayers: 2,
     inputs: 100,
-    layersSize: 15,
+    layersSize: 5,
     outputs: 1,
     outActvationFunc: sigma
 };

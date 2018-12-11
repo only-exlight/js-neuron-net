@@ -9,7 +9,7 @@ export class TrainerApp {
     private curNetData: Int8Array = new Int8Array(100);
     private net: NeuralNet;
 
-    constructor (
+    constructor(
         private trainerSet: TrainingExample[],
         cnvParams: CanvasParams,
         netParams: NeuralNetConfig
@@ -50,16 +50,30 @@ export class TrainerApp {
     }
 
     private startTraining() {
-        console.warn('Start training');
-        this.images.forEach((img, i) => {
-            this.getImageData(img);
-            this.net.newDataSet(this.curNetData);
-            if (this.trainerSet[i].isSquare) {
-                this.net.correctWegth(1);
-            } else {
-                this.net.correctWegth(0);
+        console.warn('Start training', this.net);
+        let trained: boolean = false;
+        let counter = 5;
+        while (!trained) {
+            counter++;
+            this.images.forEach((img, i) => {
+                this.getImageData(img);
+                const res = this.net.newDataSet(this.curNetData);
+                if (Boolean(res[0]) === this.trainerSet[i].isSquare) {
+                    trained = true;
+                } else {
+                    trained = false;
+                    if (this.trainerSet[i].isSquare) {
+                        this.net.backpropagation(1);
+                    } else {
+                        this.net.backpropagation(0);
+                    }
+                }
+            })
+            if (counter > 1) {
+                trained = true;
             }
-        })
+        }
+        console.log(this.net);
     }
 
     private getImageData(img: HTMLImageElement) {
