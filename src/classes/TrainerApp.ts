@@ -16,7 +16,11 @@ export class TrainerApp {
     ) {
         this.net = new NeuralNet(netParams, this.makeEmptyData());
         this.initCanvas(cnvParams);
-        this.initSet(trainerSet);
+    }
+
+    public loadNet() {
+        const netJSON = localStorage.getItem('net');
+        this.net.loadFromJSON(netJSON);
     }
 
     private makeEmptyData(): Int8Array {
@@ -34,7 +38,7 @@ export class TrainerApp {
         this.ctx = cnv.getContext('2d');
     }
 
-    private initSet(trainerSet: TrainingExample[]): void {
+    public initSet(trainerSet: TrainingExample[]): void {
         const promises: Promise<void>[] = [];
         this.images = trainerSet.map(trItem => {
             const imgElem = new Image(10, 10);

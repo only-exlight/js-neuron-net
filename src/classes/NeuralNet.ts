@@ -13,7 +13,7 @@ export class NeuralNet {
     private E = 0.5;
     private A = 0.1;
     
-    constructor (config: NeuralNetConfig, inputValues: Int8Array) {
+    constructor (config: NeuralNetConfig, private inputValues: Int8Array) {
         this.initInputLayer(config.inputs, 0, 1, inputValues);
         this.initOutputLayer(config.outputs, config.outActvationFunc);
         this.initHideLayer(config.hideLayers, config.layersSize, config.activationFunc);
@@ -43,6 +43,13 @@ export class NeuralNet {
         }
     }
     //
+    public loadFromJSON(json: string) {
+        const netObj = JSON.parse(json);
+        console.log(netObj);
+        this.A = netObj.A;
+        this.E = netObj.B;
+        this.initInputLayer(netObj.inputLayer.length, 0, 1, this.inputValues);
+    }
     
     public backpropagation(waitVal: number) {
         console.warn(`Обратное распространение, ожидалось: ${waitVal}, сейчас ${this.outLayer[0].signal}`);

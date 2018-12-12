@@ -19,4 +19,6 @@ const netParapms: NeuralNetConfig = {
     outActvationFunc: sigma
 };
 
-new TrainerApp(TRAINING_DATA, cnvParams, netParapms);
+const trainer = new TrainerApp(TRAINING_DATA, cnvParams, netParapms);
+// trainer.initSet(TRAINING_DATA);
+trainer.loadNet();

@@ -24,6 +24,10 @@ export class InputNeuron implements Neuron {
         return this.links;
     }
 
+    public initFromData(neuron: Neuron) {
+        
+    }
+
     public changeInputSignal(signal: number, i: number ): void {
         this.normalize(signal);
     }
