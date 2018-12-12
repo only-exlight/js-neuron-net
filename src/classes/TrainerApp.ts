@@ -8,6 +8,7 @@ export class TrainerApp {
     private images: HTMLImageElement[];
     private curNetData: Int8Array = new Int8Array(100);
     private net: NeuralNet;
+    private openFile: HTMLInputElement;
 
     constructor(
         private trainerSet: TrainingExample[],
@@ -15,12 +16,39 @@ export class TrainerApp {
         netParams: NeuralNetConfig
     ) {
         this.net = new NeuralNet(netParams, this.makeEmptyData());
+        this.opneFileInit();
         this.initCanvas(cnvParams);
     }
 
     public loadNet() {
         const netJSON = localStorage.getItem('net');
         this.net.loadFromJSON(netJSON);
+    }
+
+    private opneFileInit() {
+        this.openFile = <HTMLInputElement>document.getElementById('openImg');
+        this.openFile.onchange = this.changeFile.bind(this);
+    }
+
+    private changeFile(e: any) {
+        const reader = new FileReader();
+        // console.log('change file!');
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onloadend = this.fileOnLoad.bind(this);
+    }
+
+    private fileOnLoad(e: any) {
+        // console.log('File load');
+        const img = new Image();
+        img.src = e.target.result;
+        img.addEventListener('load', this.fileImagOnLoad.bind(this));
+    }
+
+    private fileImagOnLoad(e: any) {
+        this.getImageData(e.target);
+        this.net.newDataSet(this.curNetData)[0];
+        this.net.start();
+        console.warn(this.net);
     }
 
     private makeEmptyData(): Int8Array {
@@ -59,22 +87,25 @@ export class TrainerApp {
         let counter = 0;
         while (!trained) {
             counter++;
+            const errArr: number[] = [];
             this.images.forEach((img, i) => {
                 this.getImageData(img);
-                console.log(`Image number ${i}`);
+                //console.log(`Image number ${i}`);
                 const res = this.net.newDataSet(this.curNetData);
                 if (this.trainerSet[i].isSquare) {
+                    const currErr = 1 - res[0];
                     this.net.backpropagation(1);
                 } else {
+                    const currErr = res[0];
                     this.net.backpropagation(0);
                 }
-            })
-            if (counter > 10) {
+            });
+            if (counter > 1000000) {
                 trained = true;
             }
         }
         localStorage.setItem('net', JSON.stringify(this.net));
-        console.log(this.net);
+        console.log(this.net, `Итераций: ${counter}`);
     }
 
     private about(idel: number, currnet: number) {
@@ -82,6 +113,7 @@ export class TrainerApp {
     }
 
     private getImageData(img: HTMLImageElement) {
+        console.log('!');
         try {
             this.ctx.drawImage(img, 0, 0);
         } catch (e) {
@@ -92,13 +124,15 @@ export class TrainerApp {
     }
 
     private getPixelColor(imageArray: Uint8ClampedArray) {
+        console.log('getPixelCOlor');
         // Where: i - R chanel, i + 1 - G changel, i + 2 - B changel, i + 3 A chanel
-        for (let i = 0, k = 0; i <= imageArray.length; i += 4, k++) {
+        for (let i = 0, k = 0; i < imageArray.length; i += 4, k++) {
             if (imageArray[i] === 255 && imageArray[i + 1] === 255 && imageArray[i + 2] === 255) {
                 this.curNetData[k] = 1;
             } else {
                 this.curNetData[k] = 0;
             }
+            console.log(imageArray[i], imageArray[i + 1],  imageArray[i + 2]);
         }
     }
 }

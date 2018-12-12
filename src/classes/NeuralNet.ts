@@ -73,7 +73,7 @@ export class NeuralNet {
     }
     
     public backpropagation(waitVal: number) {
-        console.warn(`Обратное распространение, ожидалось: ${waitVal}, сейчас ${this.outLayer[0].signal}`);
+        // console.warn(`Обратное распространение, ожидалось: ${waitVal}, сейчас ${this.outLayer[0].signal}`);
         this.outLayer[0].delta = this.calcDELTAErrOut(waitVal, this.outLayer[0].signal);
         for (let i = this.hideLeyers.length - 1; i >= 0; i--) {
             const layer = this.hideLeyers[i];
@@ -126,7 +126,7 @@ export class NeuralNet {
         return res
     }
 
-    private calcMSE(elements: number[], wait: number): number {
+    public calcMSE(elements: number[], wait: number): number {
         let summ: number;
         for (let i = 0; i < elements.length; i++) {
             summ += Math.pow((wait - elements[i]), 2);
