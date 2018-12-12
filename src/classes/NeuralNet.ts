@@ -175,7 +175,8 @@ export class NeuralNet {
 
     public newDataSet(data: Int8Array) {
         for (let i = 0; i < this.inputLayer.length; i++) {
-            this.inputLayer[i].addInputSignal(data[i]);
+            const inputNeuron = this.inputLayer[i];
+            inputNeuron.addInputSignal(data[i]);
         }
         return this.restart();
     }

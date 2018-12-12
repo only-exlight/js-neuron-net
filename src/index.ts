@@ -20,6 +20,6 @@ const netParapms: NeuralNetConfig = {
 };
 
 const trainer = new TrainerApp(TRAINING_DATA, cnvParams, netParapms);
-trainer.loadNet();
-// trainer.initSet(TRAINING_DATA);
+//trainer.loadNet();
+trainer.initSet(TRAINING_DATA);
 
