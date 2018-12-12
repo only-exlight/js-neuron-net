@@ -9,6 +9,9 @@ export class HideNeuron implements Neuron {
     private min = 0;
     private max = 1;
 
+    //
+    public delta: number;
+
     constructor(inputCount: number, actFunc: Function) {
         this.links = [];
         this.activated = actFunc;
@@ -34,10 +37,6 @@ export class HideNeuron implements Neuron {
 
     public changeInputSignal(val:number, i: number): void {
         this.inputSignals[i] = val;
-    }
-
-    public correctWeight(more = false) {
-        
     }
 
     private sumed(values: number[]) {

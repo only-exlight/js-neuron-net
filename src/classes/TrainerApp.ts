@@ -52,28 +52,29 @@ export class TrainerApp {
     private startTraining() {
         console.warn('Start training', this.net);
         let trained: boolean = false;
-        let counter = 5;
+        let counter = 0;
         while (!trained) {
             counter++;
             this.images.forEach((img, i) => {
                 this.getImageData(img);
+                console.log(`Image number ${i}`);
                 const res = this.net.newDataSet(this.curNetData);
-                if (Boolean(res[0]) === this.trainerSet[i].isSquare) {
-                    trained = true;
+                if (this.trainerSet[i].isSquare) {
+                    this.net.backpropagation(1);
                 } else {
-                    trained = false;
-                    if (this.trainerSet[i].isSquare) {
-                        this.net.backpropagation(1);
-                    } else {
-                        this.net.backpropagation(0);
-                    }
+                    this.net.backpropagation(0);
                 }
             })
-            if (counter > 1) {
+            if (counter > 10) {
                 trained = true;
             }
         }
+        localStorage.setItem('net', JSON.stringify(this.net));
         console.log(this.net);
+    }
+
+    private about(idel: number, currnet: number) {
+
     }
 
     private getImageData(img: HTMLImageElement) {

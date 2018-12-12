@@ -10,7 +10,7 @@ export class NeuralNet {
     private hideLeyers: Array<HideNeuron[]> = [];
     private outLayer: OutputNeuron[] = [];
     // E - скорость обучения, A - момент
-    private E = 0.1;
+    private E = 0.5;
     private A = 0.1;
     
     constructor (config: NeuralNetConfig, inputValues: Int8Array) {
@@ -46,23 +46,55 @@ export class NeuralNet {
     
     public backpropagation(waitVal: number) {
         console.warn(`Обратное распространение, ожидалось: ${waitVal}, сейчас ${this.outLayer[0].signal}`);
-        const deltaOut = this.calcDeltaErrOut(waitVal, this.outLayer[0].signal);
-        console.warn(`Итерация завершена!`);
+        this.outLayer[0].delta = this.calcDELTAErrOut(waitVal, this.outLayer[0].signal);
+        for (let i = this.hideLeyers.length - 1; i >= 0; i--) {
+            const layer = this.hideLeyers[i];
+            for (let j = 0; j < layer.length; j++) {
+                const neuron = layer[j];
+                let summ: number = 0;
+                for (let k = 0; k < neuron.outLinks.length; k++) {
+                    const link = neuron.outLinks[k];
+                    summ += link.neuron.delta * link.weight;
+                }
+                neuron.delta = this.calcDeltaErrHide(this.derivativeSigma(neuron.signal), summ);
+                for (let k = 0; k < neuron.outLinks.length; k++) {
+                    const link = neuron.outLinks[k];
+                    const linkGrad = this.GRAD(link.neuron.delta, neuron.signal);
+                    link.lastChnge = this.calcChange(linkGrad, link.lastChnge);
+                    // console.log(link.lastChnge);
+                    link.weight += link.lastChnge;
+                }
+            }
+        }
+        for (let i = 0; i < this.inputLayer.length; i++) {
+            const inputNeuron = this.inputLayer[i];
+            let summ: number = 0;
+                for (let k = 0; k < inputNeuron.outLinks.length; k++) {
+                    const link = inputNeuron.outLinks[k];
+                    summ += link.neuron.delta * link.weight;
+                }
+                inputNeuron.delta = this.calcDeltaErrHide(this.derivativeSigma(inputNeuron.signal), summ);
+                for (let k = 0; k < inputNeuron.outLinks.length; k++) {
+                    const link = inputNeuron.outLinks[k];
+                    const linkGrad = this.GRAD(link.neuron.delta, inputNeuron.signal);
+                    link.lastChnge = this.calcChange(linkGrad, link.lastChnge);
+                    // console.log(link.lastChnge);
+                    link.weight += link.lastChnge;
+                }
+            
+        }
+        // console.warn(`Итерация завершена!`);
     }
 
-    private calcDeltaErrOut(ideal: number, current: number): number {
+    private calcDELTAErrOut(ideal: number, current: number): number {
         const res = (ideal - current) * this.derivativeSigma(current);
-        console.warn(`Дельта для выходного нейрона ${res}`);
+        // console.warn(`Дельта для выходного нейрона ${res}`);
         return res;
     }
 
-    private calcDeltaErrHide(weight: number[], err: number, current: number) {
-        let summ: number;
-        for (let i = 0; i < weight.length; i++) {
-            summ = weight[i] * err;
-        }
-        const res = this.derivativeSigma(current) * summ;
-        console.warn(`Дельта ошибки для скрытого нейрона ${res}`);
+    private calcDeltaErrHide(sigma: number, summ: number) {
+        const res = sigma * summ;
+        // console.warn(`Дельта ошибки для скрытого нейрона ${res}`);
         return res
     }
 
@@ -78,19 +110,19 @@ export class NeuralNet {
 
     private derivativeSigma(out: number): number {
         const res = (1 - out) * out
-        console.warn(`Производная от sigma ${res}`);
+        // console.warn(`Производная от sigma ${res}`);
         return res;
     }
 
     private GRAD(err: number, out: number) : number {
         const res = err * out;
-        console.warn(`Градиент ${res}`);
+        // console.warn(`Градиент ${res}`);
         return res;
     }
     // E - скорость обучения, A - момент
     private calcChange(GRAD: number, lCh: number): number {
         const res = this.E * GRAD + this.A * lCh;
-        console.warn(`Изменение веса ${res}`)
+        // console.warn(`Изменение веса ${res}`)
         return res;
     }
     //
@@ -166,7 +198,8 @@ export class NeuralNet {
             secondLayer.forEach((lNeuron: Neuron) => 
                 neuron.addLink({
                     weight: Math.random() * (1 - 0.1) + 0.1,
-                    neuron: lNeuron
+                    neuron: lNeuron,
+                    lastChnge: 0
                 })
         ));
     }    
