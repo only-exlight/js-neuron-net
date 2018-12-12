@@ -113,7 +113,6 @@ export class TrainerApp {
     }
 
     private getImageData(img: HTMLImageElement) {
-        console.log('!');
         try {
             this.ctx.drawImage(img, 0, 0);
         } catch (e) {
@@ -132,7 +131,6 @@ export class TrainerApp {
             } else {
                 this.curNetData[k] = 0;
             }
-            console.log(imageArray[i], imageArray[i + 1],  imageArray[i + 2]);
         }
     }
 }
