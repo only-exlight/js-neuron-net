@@ -1,5 +1,5 @@
 import { TRAINING_DATA } from './consts/learn-set';
-import { sigma, threshold } from './functions/activatedFunctions';
+import { sigma } from './functions/activatedFunctions';
 import { TrainerApp } from './classes/TrainerApp';
 import { CanvasParams } from './interfaces/CanvasParams';
 import { NeuralNetConfig } from './interfaces/NeuralNetConfig.interface';
@@ -20,5 +20,5 @@ const netParapms: NeuralNetConfig = {
 };
 
 const trainer = new TrainerApp(TRAINING_DATA, cnvParams, netParapms);
-// trainer.initSet(TRAINING_DATA);
+//trainer.initSet(TRAINING_DATA);
 trainer.loadNet();

@@ -27,6 +27,15 @@ export class HideNeuron implements Neuron {
         return this.links;
     }
 
+    public initFromData(neuron: any) {
+        for (let i = 0; i < neuron.links.length; i++) {
+            const jsonLink = neuron.links[i];
+            this.delta = neuron.delta;
+            this.links[i].weight = jsonLink.weight;
+            this.links[i].lastChnge = jsonLink.lastChnge;
+        }
+    }
+
     public addLink(link: NeuronLink) {
         this.links.push(link);
     }

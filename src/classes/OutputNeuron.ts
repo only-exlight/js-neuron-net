@@ -22,6 +22,10 @@ export class OutputNeuron implements Neuron {
         return null;
     }
 
+    public initFromData(neuron: any) {
+        this.delta = neuron.delta;
+    }
+
     public addInputSignal(val: number) {
         this.inputSignals.push(val);
     }

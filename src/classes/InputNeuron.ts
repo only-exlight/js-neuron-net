@@ -24,8 +24,12 @@ export class InputNeuron implements Neuron {
         return this.links;
     }
 
-    public initFromData(neuron: Neuron) {
-        
+    public initFromData(neuron: any) {
+        for (let i = 0; i < neuron.links.length; i++) {
+            const jsonLink = neuron.links[i];
+            this.links[i].weight = jsonLink.weight;
+            this.links[i].lastChnge = jsonLink.lastChnge;
+        }
     }
 
     public changeInputSignal(signal: number, i: number ): void {

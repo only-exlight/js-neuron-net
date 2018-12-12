@@ -47,8 +47,29 @@ export class NeuralNet {
         const netObj = JSON.parse(json);
         console.log(netObj);
         this.A = netObj.A;
-        this.E = netObj.B;
-        this.initInputLayer(netObj.inputLayer.length, 0, 1, this.inputValues);
+        this.E = netObj.E;
+        for (let i = 0; i < this.inputLayer.length; i++) {
+            const neuron = this.inputLayer[i];
+            const jsonNData = netObj.inputLayer[i];
+            neuron.initFromData(jsonNData);
+        }
+
+        for (let i = 0; i < this.hideLeyers.length; i++) {
+            const layer = this.hideLeyers[i];
+            const jsonLayer = netObj.hideLeyers[i];
+            for (let j = 0; j < layer.length; j++) {
+                const neuron = layer[j];
+                const jsonNeuron = jsonLayer[j];
+                neuron.initFromData(jsonNeuron);
+            }
+        }
+
+        for (let i = 0; i < this.outLayer.length; i++) {
+            const outNeuron = this.outLayer[i];
+            const jsonOutNeuron = netObj.outLayer[i];
+            outNeuron.initFromData(jsonOutNeuron);
+        }
+        console.log(this);
     }
     
     public backpropagation(waitVal: number) {
