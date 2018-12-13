@@ -87,7 +87,6 @@ export class TrainerApp {
         let trained: boolean = false;
         let counter = 0;
         this.images.forEach(img => this.imagesData.push(this.getImageData(img)));
-        console.log(this.imagesData);
         while (!trained) {
             counter++;
             const errArr: number[] = [];
@@ -95,11 +94,11 @@ export class TrainerApp {
                 const arr = this.imagesData[i];
                 const res = this.net.newDataSet(arr);
                 if (this.trainerSet[i].isSquare) {
-                    const currErr = 1 - res[0];
+                    const currErr = 1 - res[0].err;
                     errArr.push(currErr);
                     this.net.backpropagation(1);
                 } else {
-                    const currErr = res[0];
+                    const currErr = res[0].err;
                     errArr.push(currErr);
                     this.net.backpropagation(0);
                 }
@@ -114,16 +113,14 @@ export class TrainerApp {
             let avErr = summ / errArr.length;
             if (counter % 100000 === 0) {
                 console.log(`Эпоха: ${counter}`);
+                console.log(errArr, this.net);
                 console.log(`Средняя ошибка ${avErr}`);
                 localStorage.setItem('net', JSON.stringify(this.net));
             }
 
-            if (avErr < 0.2) {
+            if (avErr < 0.2 || counter === 500000) {
                 trained = true;
-            } /*
-            if (counter > 3) {
-                trained = true;
-            }*/
+            }
         }
         localStorage.setItem('net', JSON.stringify(this.net));
         console.log('ЗАВЕРШЕНО!');

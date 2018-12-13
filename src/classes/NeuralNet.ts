@@ -12,6 +12,8 @@ export class NeuralNet {
     // E - скорость обучения, A - момент
     private E = 0.8;
     private A = 0.6;
+
+    private MAGIC_NUMBER = 0.8;
     
     constructor (config: NeuralNetConfig, private inputValues: Int8Array) {
         this.initInputLayer(config.inputs, 0, 1, inputValues);
@@ -73,7 +75,55 @@ export class NeuralNet {
     }
     
     public backpropagation(waitVal: number) {
+        this.errOutLayer(waitVal);
+        for (let i = this.hideLeyers.length - 1; i >= 0; i--) {
+            const layer = this.hideLeyers[i];
+            for (let j = 0; j < layer.length; j++) {
+                const neuron = layer[j];
+                // Если мы находимся на последнем слое
+                if (i + 1 === this.hideLeyers.length) {
+                    // console.log(`Last hide layer ${i}`);
+                    this.errOfLayer(this.outLayer, neuron, waitVal);
+                    // console.log('----------')
+                } 
+                // Если мы находимся c первого по предпоследний слой 
+                else if (i >= 0 && i < this.hideLeyers.length - 1) {
+                    // console.log(`Avarage hide layer ${i}`);
+                    const nextHideLayer = this.hideLeyers[i + 1];
+                    this.errOfLayer(nextHideLayer, neuron, waitVal);
+                    // console.log('----------');
+                }
+            }
+        }
+        for (let i = 0; i < this.inputLayer.length; i++) {
+            // console.log(`Input layer. Length: ${this.inputLayer.length}`);
+            const inputNeuron = this.inputLayer[i];
+            this.errOfLayer(this.hideLeyers[0], inputNeuron, waitVal);
+            // console.log('----------');
+        }
         
+    }
+
+    public errOutLayer(waitRes: number): void {
+        const curOutSignal = this.outLayer[0].signal;
+        this.outLayer[0].err = curOutSignal * (waitRes - curOutSignal) ** 2;
+    }
+
+    public errOfLayer(prevErrors: Neuron[], neuron: Neuron, waitRes: number): void {
+        let summLxW: number = 0;
+        for (let i = 0; i < prevErrors.length; i++) {
+            const layerNeuron = prevErrors[i];
+            const weight = neuron.outLinks[i].weight;
+            summLxW += layerNeuron.err * weight;
+        }
+        // console.log(neuron.signal * (waitRes - neuron.signal) * summLxW);
+        neuron.err = neuron.signal * (waitRes - neuron.signal) * summLxW;
+        for (let i = 0; i < neuron.outLinks.length; i++) {
+            const link = neuron.outLinks[i];
+            const delta = this.MAGIC_NUMBER * link.neuron.err * neuron.signal;
+            link.weight = link.weight - delta;
+        }
+       
     }
 
     public start(): any {
@@ -117,7 +167,7 @@ export class NeuralNet {
                 });
             })
         );
-        return this.outLayer.map(neuron => neuron.signal);
+        return this.outLayer.map(neuron => neuron);
     }
 
     private initInputLayer(inCount: number, min: number, max: number, inputValues: Int8Array): void {

@@ -7,6 +7,7 @@ export class OutputNeuron implements Neuron {
     private outSignal: number;
     //
     public delta: number;
+    public err: number;
 
     constructor(actFunc: Function) {
         this.activated = actFunc;

@@ -8,6 +8,7 @@ export class InputNeuron implements Neuron {
     private normOutSignal = 0;
 
     public delta: number;
+    public err: number;
 
     constructor(min: number, max: number) {
         this.links = [];

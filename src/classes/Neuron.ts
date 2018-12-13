@@ -9,8 +9,10 @@ export class HideNeuron implements Neuron {
     private min = 0;
     private max = 1;
 
-    //
+    // old - delete this;
     public delta: number;
+    //
+    public err: number;
 
     constructor(inputCount: number, actFunc: Function) {
         this.links = [];
