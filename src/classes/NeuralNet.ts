@@ -10,8 +10,8 @@ export class NeuralNet {
     private hideLeyers: Array<HideNeuron[]> = [];
     private outLayer: OutputNeuron[] = [];
     // E - скорость обучения, A - момент
-    private E = 0.5;
-    private A = 0.1;
+    private E = 0.8;
+    private A = 0.6;
     
     constructor (config: NeuralNetConfig, private inputValues: Int8Array) {
         this.initInputLayer(config.inputs, 0, 1, inputValues);

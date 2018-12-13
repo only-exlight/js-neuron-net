@@ -1,7 +1,7 @@
 const fs = require('fs');
 const learn = [];
 
-for (let i = 1; i <= 20; i++) {
+for (let i = 1; i <= 15; i++) {
     learn.push({
         image: 'training/' + i + '.png',
         isSquare: false

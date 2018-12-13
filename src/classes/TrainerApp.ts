@@ -6,7 +6,7 @@ import { NeuralNetConfig } from '../interfaces/NeuralNetConfig.interface';
 export class TrainerApp {
     private ctx: CanvasRenderingContext2D;
     private images: HTMLImageElement[];
-    private curNetData: Int8Array = new Int8Array(100);
+    private curNetData: Int8Array = new Int8Array(25);
     private net: NeuralNet;
     private openFile: HTMLInputElement;
     private imagesData: Int8Array[] = [];
@@ -53,7 +53,7 @@ export class TrainerApp {
     }
 
     private makeEmptyData(): Int8Array {
-        const empty = new Int8Array(100);
+        const empty = new Int8Array(25);
         for (let i = 0; i < empty.length; i++) {
             empty[i] = 0;
         }
@@ -70,7 +70,7 @@ export class TrainerApp {
     public initSet(trainerSet: TrainingExample[]): void {
         const promises: Promise<void>[] = [];
         this.images = trainerSet.map(trItem => {
-            const imgElem = new Image(10, 10);
+            const imgElem = new Image(5, 5);
             imgElem.src = trItem.image;
             promises.push(this.initImgWait(imgElem));
             return imgElem;
@@ -87,6 +87,7 @@ export class TrainerApp {
         let trained: boolean = false;
         let counter = 0;
         this.images.forEach(img => this.imagesData.push(this.getImageData(img)));
+        console.log(this.imagesData);
         while (!trained) {
             counter++;
             const errArr: number[] = [];
@@ -114,6 +115,7 @@ export class TrainerApp {
             if (counter % 100000 === 0) {
                 console.log(`Эпоха: ${counter}`);
                 console.log(`Средняя ошибка ${avErr}`);
+                localStorage.setItem('net', JSON.stringify(this.net));
             }
 
             if (avErr < 0.2) {
@@ -138,12 +140,12 @@ export class TrainerApp {
         } catch (e) {
             console.log(e);
         }
-        const imgData: ImageData = this.ctx.getImageData(0, 0, 10, 10);
+        const imgData: ImageData = this.ctx.getImageData(0, 0, 5, 5);
         return this.getPixelColor(imgData.data);
     }
 
     private getPixelColor(imageArray: Uint8ClampedArray) {
-        const curImageData: Int8Array = new Int8Array(100);
+        const curImageData: Int8Array = new Int8Array(25);
         // Where: i - R chanel, i + 1 - G changel, i + 2 - B changel, i + 3 A chanel
         for (let i = 0, k = 0; i < imageArray.length; i += 4, k++) {
             if (imageArray[i] === 255 && imageArray[i + 1] === 255 && imageArray[i + 2] === 255) {
